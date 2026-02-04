@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 from datetime import datetime
+from zoneinfo import ZoneInfo
 import csv
 import os
 
@@ -16,7 +17,7 @@ if not el:
     raise RuntimeError("Elemento non trovato")
 
 value = el.get_text(strip=True)
-date, time = datetime.now().strftime("%Y-%m-%d,%H:%M").split(",")
+date, time = datetime.now(ZoneInfo("Europe/Zurich")).strftime("%Y-%m-%d,%H:%M").split(",")
 
 
 file_exists = os.path.isfile(CSV_FILE)
