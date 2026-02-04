@@ -1,4 +1,4 @@
-name: Hourly occupancy check
+name: Hourly occupancy log
 
 on:
   schedule:
@@ -10,8 +10,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+
       - run: pip install requests beautifulsoup4
+
       - run: python scrape.py
+
+      - name: Commit updated log
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add occupancy_log.csv
+          git commit -m "Update occupancy log" || echo "No changes"
+          git push
