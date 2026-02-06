@@ -19,6 +19,16 @@ df = df[['timestamp', 'value']].set_index("timestamp").resample("1min").interpol
 df = df[df.index.minute == 0]
 df = df[df.index.hour >= 6]
 
+# Calcoliamo il primo e l'ultimo scrape
+primo_scrape = df.index.min()
+ultimo_scrape = df.index.max()
+
+# Formattiamo le date per una lettura più piacevole
+fmt_display = "%d/%m/%Y alle %H:%M"
+
+# Mostriamo il messaggio in un box informativo
+st.info(f"**Intervallo dati**: dal {primo_scrape.strftime(fmt_display)} al {ultimo_scrape.strftime(fmt_display)}")
+
 def extract_day(df, day):
     # 'day' arriva da streamlit ed è già un oggetto date.
     # Non serve chiamare day.date()
