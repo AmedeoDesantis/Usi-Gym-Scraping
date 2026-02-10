@@ -49,10 +49,11 @@ def extract_general_mean(df, day):
 
     return hours_mean.values, hours_mean.index
 
-def extract_weekday_mean(df, day):
+def extract_weekday_mean(df, weekday):
     
-    weekday = day.weekday()
     weekday_df = df[df.index.dayofweek == weekday]
+    day = datetime.today()
+    day.day = weekday
     return extract_general_mean(weekday_df, day)
 
 
@@ -66,7 +67,10 @@ with st.sidebar:
     st.header("Configurazione")
     
     # Selettore Data
-    data_sel = st.date_input("Seleziona Giorno", value=datetime.today())
+    data_sel = st.date_input("Seleziona data da visualizzare", value=datetime.today())
+    weekday_sel = st.selectbox("Seleziona giorno della settiaman da visualizzare", 
+                               ("Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato", "Domenica"),
+                               index = data_sel.weekday())
     
     st.divider()
     st.subheader("Visualizzazione")
@@ -86,15 +90,15 @@ def add_to_plot(values, index, name, color=None):
 # Logica di popolamento grafico
 if show_specific:
     v, i = extract_day(df, data_sel)
-    add_to_plot(v, i, f"Occupazione {data_sel.strftime('%d/%m/%Y')}", "#636EFA")
+    add_to_plot(v, i, f"Occupazione {data_sel.strftime('%d/%m/%Y')}", "#595457")
 
 if show_general:
     v, i = extract_general_mean(df, data_sel)
-    add_to_plot(v, i, "Media Generale", "#EF553B")
+    add_to_plot(v, i, "Media Generale", "#710627")
 
 if show_weekday:
-    v, i = extract_weekday_mean(df, data_sel)
-    add_to_plot(v, i, f"Media {inv_weekdays[data_sel.weekday()]}", "#00CC96")
+    v, i = extract_weekday_mean(df, weekday_sel)
+    add_to_plot(v, i, f"Media {inv_weekdays[weekday_sel]}", "#9E1946")
 
 # Formattazione Assi
 fig.update_layout(
