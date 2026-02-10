@@ -88,15 +88,15 @@ def add_to_plot(values, index, name, color=None):
 # Logica di popolamento grafico
 if show_specific:
     v, i = extract_day(df, data_sel)
-    add_to_plot(v, i, f"Occupazione {data_sel.strftime('%d/%m/%Y')}", "#595457")
+    add_to_plot(v, i, f"Occupazione {data_sel.strftime('%d/%m/%Y')}", "#EBF2FA")
 
 if show_general:
     v, i = extract_general_mean(df, data_sel)
-    add_to_plot(v, i, "Media Generale", "#710627")
+    add_to_plot(v, i, "Media Generale", "#D11149")
 
 if show_weekday:
     v, i = extract_weekday_mean(df, data_sel, weekdays[weekday_sel])
-    add_to_plot(v, i, f"Media {weekday_sel}", "#9E1946")
+    add_to_plot(v, i, f"Media {weekday_sel}", "#588B8B")
 
 # Formattazione Assi
 fig.update_layout(
