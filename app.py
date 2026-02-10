@@ -49,11 +49,9 @@ def extract_general_mean(df, day):
 
     return hours_mean.values, hours_mean.index
 
-def extract_weekday_mean(df, weekday):
+def extract_weekday_mean(df, day, weekday):
     
     weekday_df = df[df.index.dayofweek == weekday]
-    day = datetime.today()
-    day.day = weekday
     return extract_general_mean(weekday_df, day)
 
 
@@ -97,7 +95,7 @@ if show_general:
     add_to_plot(v, i, "Media Generale", "#710627")
 
 if show_weekday:
-    v, i = extract_weekday_mean(df, weekday_sel)
+    v, i = extract_weekday_mean(df, data_sel, weekday_sel)
     add_to_plot(v, i, f"Media {inv_weekdays[weekday_sel]}", "#9E1946")
 
 # Formattazione Assi
