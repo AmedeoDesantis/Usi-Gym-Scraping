@@ -64,12 +64,12 @@ st.caption(f"**Intervallo dati**: dal {primo_scrape.strftime(fmt_display)} al {u
 with st.sidebar:
     st.header("Configurazione")
     
-    # Selettore Data
-    data_sel = st.date_input("Seleziona data da visualizzare", value=datetime.today())
-    weekday_sel = st.selectbox("Seleziona giorno della settiaman da visualizzare", 
+    weekday_sel = st.selectbox("Giorno della settimana", 
                                ("Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato", "Domenica"),
-                               index = data_sel.weekday())
-    
+                               index = datetime.today().weekday())
+    # Selettore Data
+    data_sel = st.date_input("Giorno specifico", value=datetime.today())
+
     st.divider()
     st.subheader("Visualizzazione")
     show_specific = st.checkbox("Occupazione del giorno", value=False)
@@ -95,8 +95,8 @@ if show_general:
     add_to_plot(v, i, "Media Generale", "#710627")
 
 if show_weekday:
-    v, i = extract_weekday_mean(df, data_sel, weekday_sel)
-    add_to_plot(v, i, f"Media {inv_weekdays[weekday_sel]}", "#9E1946")
+    v, i = extract_weekday_mean(df, data_sel, weekdays[weekday_sel])
+    add_to_plot(v, i, f"Media {weekday_sel}", "#9E1946")
 
 # Formattazione Assi
 fig.update_layout(
