@@ -88,11 +88,11 @@ def add_to_plot(values, index, name, color=None):
 # Logica di popolamento grafico
 if show_specific:
     v, i = extract_day(df, data_sel)
-    add_to_plot(v, i, f"Occupazione {data_sel.strftime('%d/%m/%Y')}", "#626369")
+    add_to_plot(v, i, f"Occupazione {data_sel.strftime('%d/%m/%Y')}", "#D0CFD1")
 
 if show_general:
     v, i = extract_general_mean(df, data_sel)
-    add_to_plot(v, i, "Media Generale", "#25262F")
+    add_to_plot(v, i, "Media Generale", "#626369")
 
 if show_weekday:
     v, i = extract_weekday_mean(df, data_sel, weekdays[weekday_sel])
