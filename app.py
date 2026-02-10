@@ -102,7 +102,7 @@ if show_weekday:
 fig.update_layout(
     xaxis_title="Orario",
     yaxis_title="Livello Occupazione",
-    xaxis=dict(tickmode='linear', tick0=6, dtick=1, range=[6, 24]),
+    xaxis=dict(tickmode='linear', tick0=6, dtick=1, range=[6, 23]),
     yaxis=dict(
         tickvals=[0, 1, 2, 3],
         ticktext=["Bassa", "Media", "Alta", "Massima"],
