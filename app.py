@@ -26,9 +26,6 @@ ultimo_scrape = df.index.max()
 # Formattiamo le date per una lettura più piacevole
 fmt_display = "%d/%m/%Y alle %H:%M"
 
-# Mostriamo il messaggio in un box informativo
-st.info(f"**Intervallo dati**: dal {primo_scrape.strftime(fmt_display)} al {ultimo_scrape.strftime(fmt_display)}")
-
 def extract_day(df, day):
     # 'day' arriva da streamlit ed è già un oggetto date.
     # Non serve chiamare day.date()
@@ -61,19 +58,21 @@ def extract_weekday_mean(df, day):
 
 st.set_page_config(page_title="Monitor Palestra", layout="wide")
 st.title("Monitor Occupazione Palestra")
+st.caption(f"**Intervallo dati**: dal {primo_scrape.strftime(fmt_display)} al {ultimo_scrape.strftime(fmt_display)}")
+
 
 # Sidebar per i controlli
 with st.sidebar:
     st.header("Configurazione")
     
     # Selettore Data
-    data_sel = st.date_input("Seleziona Giorno", value=datetime(2026, 2, 6))
+    data_sel = st.date_input("Seleziona Giorno", value=datetime.today)
     
     st.divider()
     st.subheader("Visualizzazione")
-    show_specific = st.checkbox("Occupazione del giorno", value=True)
-    show_general = st.checkbox("Media generale storica", value=False)
-    show_weekday = st.checkbox(f"Media dei {inv_weekdays[data_sel.weekday()]}", value=False)
+    show_specific = st.checkbox("Occupazione del giorno", value=False)
+    show_general = st.checkbox("Media generale storica", value=True)
+    show_weekday = st.checkbox(f"Media dei {inv_weekdays[data_sel.weekday()]}", value=True)
 
 # Creazione del grafico con Plotly (per avere etichette Y personalizzate)
 fig = go.Figure()
@@ -113,5 +112,3 @@ fig.update_layout(
 )
 
 st.plotly_chart(fig, use_container_width=True)
-
-
