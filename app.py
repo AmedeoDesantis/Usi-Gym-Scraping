@@ -66,7 +66,7 @@ with st.sidebar:
     st.header("Configurazione")
     
     # Selettore Data
-    data_sel = st.date_input("Seleziona Giorno", value=datetime.today)
+    data_sel = st.date_input("Seleziona Giorno", value=datetime.today())
     
     st.divider()
     st.subheader("Visualizzazione")
