@@ -62,15 +62,21 @@ def extract_day(df: pd.DataFrame, day: datetime) -> tuple[pd.Series, pd.Datetime
         
     return day_df['value'].rolling(window=50, center=True).mean(), day_df.index
 
-def extract_general_mean(df: pd.DataFrame, day: datetime.date) -> tuple[pd.Series, pd.DatetimeIndex]:
-
+def extract_general_mean(df, day):
+    # Gestisci il caso di DataFrame vuoto
+    if df.empty:
+        return pd.Series(dtype='float64'), pd.DatetimeIndex([])
+    
     hours_mean = df['value'].groupby(df.index.time).mean()
-    #hours_mean = hours_mean.map(lambda x: round(x))
     hours_mean.index = [datetime.combine(day, time) for time in hours_mean.index]
-
+    
+    # Assicurati che l'indice sia DatetimeIndex
+    if not isinstance(hours_mean.index, pd.DatetimeIndex):
+        hours_mean.index = pd.DatetimeIndex(hours_mean.index)
+    
     hours_mean = hours_mean.resample("1min").interpolate()
     hours_mean = hours_mean.rolling(window=50, center=True).mean()
-
+    
     return hours_mean.values, hours_mean.index
 
 def extract_weekday_mean(df: pd.DataFrame, day: datetime.date, weekday: int) -> tuple[pd.Series, pd.DatetimeIndex]:
