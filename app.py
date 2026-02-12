@@ -90,40 +90,42 @@ st.title("Monitor Occupazione Palestra")
 st.caption(f"**Intervallo dati**: dal {primo_scrape.strftime(fmt_display)} al {ultimo_scrape.strftime(fmt_display)}")
 
 
-# Sidebar per i controlli
 with st.sidebar:
     st.header("Configurazione")
-
-    month_sel = st.selectbox("Media mese",
-                            ("Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"),
-                            index = (datetime.today().month()-1))
-    show_month = st.checkbox(f"Media di {month_sel}", value = False)
     
-    #----------------------------------------------------------------
-    #st.divider()
-
-    weekday_sel = st.selectbox("Media giorno della settimana", 
-                               ("Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato", "Domenica"),
-                               index = datetime.today().weekday())
-    show_weekday = st.checkbox(f"Media dei {weekday_sel}", value=True)
-
-    show_month_weekday = st.checkbox(f"Media dei {weekday_sel} in {month_sel}", value= True)
-
-    #----------------------------------------------------------------
-    #st.divider()
-
-
-    data_sel = st.date_input("Occupazione in data:", value=datetime.today())
-    show_specific = st.checkbox("Occupazione del giorno", value=False)
-
-    #----------------------------------------------------------------
-    #st.divider()
+    # Selettori sempre visibili
+    data_sel = st.date_input("Data di riferimento:", value=datetime.today())
     
-    show_general = st.checkbox("Media generale storica", value=False)
-
-
-
-# Creazione del grafico con Plotly (per avere etichette Y personalizzate)
+    col1, col2 = st.columns(2)
+    with col1:
+        weekday_sel = st.selectbox("Giorno", list(weekdays.keys()), 
+                                  index=datetime.today().weekday())
+    with col2:
+        month_sel = st.selectbox("Mese", list(months.keys()),
+                                index=datetime.today().month-1)
+    
+    st.divider()
+    
+    # Un solo multiselect per tutte le opzioni
+    options = st.multiselect(
+        "Linee da visualizzare:",
+        [
+            f"Occupazione del {data_sel.strftime('%d/%m/%Y')}",
+            "Media generale",
+            f"Media {weekday_sel}",
+            f"Media {month_sel}",
+            f"Media {weekday_sel} in {month_sel}"
+        ],
+        default=[f"Media {weekday_sel}", f"Media {weekday_sel} in {month_sel}"]
+    )
+    
+    # Converti le selezioni in booleani
+    show_specific = f"Occupazione del {data_sel.strftime('%d/%m/%Y')}" in options
+    show_general = "Media generale" in options
+    show_weekday = f"Media {weekday_sel}" in options
+    show_month = f"Media {month_sel}" in options
+    show_month_weekday = f"Media {weekday_sel} in {month_sel}" in options
+    
 fig = go.Figure()
 
 def add_to_plot(values, index, name, color=None):
