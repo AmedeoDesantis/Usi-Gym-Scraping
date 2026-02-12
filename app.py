@@ -102,7 +102,7 @@ with st.sidebar:
     st.header("Configurazione")
     
     # Selettori sempre visibili
-    data_sel = st.date_input("Data di riferimento:", value=datetime.today())
+    data_sel = st.date_input("Data:", value=datetime.today())
     
     col1, col2 = st.columns(2)
     with col1:
@@ -137,11 +137,11 @@ with st.sidebar:
 
     st.session_state.selected_options = options
     
-    show_specific = f"storico data" in options
-    show_general = "media generale" in options
-    show_weekday = f"media giorno" in options
-    show_month = f"media mese" in options
-    show_month_weekday = f"media mese giorno" in options
+    show_specific =         "storico data"      in options
+    show_general =          "media generale"    in options
+    show_weekday =          "media giorno"      in options
+    show_month =            "media mese"        in options
+    show_month_weekday =    "media mese giorno" in options
     
 fig = go.Figure()
 
