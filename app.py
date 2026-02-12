@@ -137,13 +137,14 @@ with st.sidebar:
     ]
 
 
-    options =[option_formatting[x] for x in st.multiselect(
+    options = st.multiselect(
         "Linee da visualizzare:",
         options=available_options,
-        #format_func = lambda x: option_formatting[x],
+        format_func = lambda x: option_formatting[x],
         key= "selected_options"
-        )]
-         
+        )
+     
+    
     show_specific =         "storico data"      in options
     show_general =          "media generale"    in options
     show_weekday =          "media giorno"      in options
