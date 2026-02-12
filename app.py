@@ -139,7 +139,7 @@ with st.sidebar:
 
     options = st.multiselect(
         "Visualizzazioni:",
-        help = "Scegli...",
+        placeholder = "Scegli...",
         options=available_options,
         format_func = lambda x: option_formatting[x],
         key= "selected_options"
