@@ -83,8 +83,8 @@ def extract_month_mean(df, day: datetime.date, month: int) -> tuple[pd.Series, p
     return extract_general_mean(month_df, day)
 
 def extract_month_weekday_mean(df, day: datetime.date, month: int, weekday: int) -> tuple[pd.Series, pd.DatetimeIndex]:
-    month_weekay_df = df[df.index.dayofweek == weekday & df.index.month == month]
-    return extract_general_mean(month_weekay_df, day)
+    month_weekday_df = df[(df.index.dayofweek == weekday) & (df.index.month == month)]
+    return extract_general_mean(month_weekday_df, day)
 
 
 st.set_page_config(page_title="Monitor Palestra", layout="wide")
