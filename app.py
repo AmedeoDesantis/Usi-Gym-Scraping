@@ -113,8 +113,14 @@ with st.sidebar:
                                 index=datetime.today().month-1)
     
     st.divider()
+
+    if 'selected_options' not in st.session_state:
+        st.session_state.selected_options = [
+            f"Media {weekday_sel}", 
+            f"Media {weekday_sel} in {month_sel}"
+        ]
+
     
-    # Un solo multiselect per tutte le opzioni
     options = st.multiselect(
         "Linee da visualizzare:",
         [
@@ -124,10 +130,11 @@ with st.sidebar:
             f"Media {month_sel}",
             f"Media {weekday_sel} in {month_sel}"
         ],
-        default=[f"Media {weekday_sel}", f"Media {weekday_sel} in {month_sel}"]
+        default= st.session_state.selected_options
     )
+
+    st.session_state.selected_options = options
     
-    # Converti le selezioni in booleani
     show_specific = f"Occupazione del {data_sel.strftime('%d/%m/%Y')}" in options
     show_general = "Media generale" in options
     show_weekday = f"Media {weekday_sel}" in options
