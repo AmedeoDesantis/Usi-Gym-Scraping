@@ -132,7 +132,7 @@ with st.sidebar:
         "Linee da visualizzare:",
         option_formatting.keys(),
         format_func = lambda x: option_formatting[x],
-        default = st.session_state.selected_options
+        key= "selected_options"
     )
 
     st.session_state.selected_options = options
