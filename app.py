@@ -128,9 +128,11 @@ with st.sidebar:
         "storico data" : f"Occupazione del {data_sel.strftime('%d/%m/%Y')}"
         }
     
+    available_options = list(option_formatting.keys())
+    
     options = st.multiselect(
         "Linee da visualizzare:",
-        option_formatting.keys(),
+        available_options,
         format_func = lambda x: option_formatting[x],
         key= "selected_options"
     )
