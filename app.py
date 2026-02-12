@@ -129,11 +129,11 @@ with st.sidebar:
         }
     
     available_options = [
-        "media_generale", 
-        "media_giorno", 
-        "media_mese", 
-        "media_mese_giorno", 
-        "storico_data"
+        "media generale", 
+        "media giorno", 
+        "media mese", 
+        "media mese giorno", 
+        "storico data"
     ]
 
 
