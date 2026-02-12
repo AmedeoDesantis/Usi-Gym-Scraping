@@ -134,8 +134,6 @@ with st.sidebar:
         format_func = lambda x: option_formatting[x],
         key= "selected_options"
     )
-
-    st.session_state.selected_options = options
     
     show_specific =         "storico data"      in options
     show_general =          "media generale"    in options
