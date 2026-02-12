@@ -5,7 +5,31 @@ import plotly.graph_objects as go
 
 df = pd.read_csv('occupancy_log.csv')
 
-weekdays = {"Lunedì" : 0, "Martedì" : 1, "Mercoledì" : 2, "Giovedì" : 3, "Venerdì" : 4, "Sabato" : 5, "Domenica" : 6}
+months = {
+    "Gennaio": 0,
+    "Febbraio": 1,
+    "Marzo": 2,
+    "Aprile": 3,
+    "Maggio": 4,
+    "Giugno": 5,
+    "Luglio": 6,
+    "Agosto": 7,
+    "Settembre": 8,
+    "Ottobre": 9,
+    "Novembre": 10,
+    "Dicembre": 11
+    }
+
+weekdays = {
+    "Lunedì" : 0, 
+    "Martedì" : 1, 
+    "Mercoledì" : 2, 
+    "Giovedì" : 3, 
+    "Venerdì" : 4, 
+    "Sabato" : 5, 
+    "Domenica" : 6
+    }
+
 inv_weekdays = {v : k for k, v in weekdays.items()}
 
 mapping = {"Bassa" : 0, "Media": 1, "Alta" : 2, "Massima" : 3}
@@ -27,8 +51,6 @@ ultimo_scrape = df.index.max()
 fmt_display = "%d/%m/%Y alle %H:%M"
 
 def extract_day(df, day):
-    # 'day' arriva da streamlit ed è già un oggetto date.
-    # Non serve chiamare day.date()
     target_date = day if isinstance(day, datetime) else day
     
     day_df = df[df.index.date == target_date]
@@ -54,6 +76,14 @@ def extract_weekday_mean(df, day, weekday):
     weekday_df = df[df.index.dayofweek == weekday]
     return extract_general_mean(weekday_df, day)
 
+def extract_month_mean(df, day, month):
+    month_df = df[df.index.month == month]
+    return extract_general_mean(month_df, day)
+
+def extract_month_weekday_mean(df, day, month, weekday):
+    month_weekay_df = df[df.index.dayofweek == weekday & df.index.month == month]
+    return extract_general_mean(month_weekay_df, day)
+
 
 st.set_page_config(page_title="Monitor Palestra", layout="wide")
 st.title("Monitor Occupazione Palestra")
@@ -63,18 +93,35 @@ st.caption(f"**Intervallo dati**: dal {primo_scrape.strftime(fmt_display)} al {u
 # Sidebar per i controlli
 with st.sidebar:
     st.header("Configurazione")
+
+    month_sel = st.selectbox("Media mese",
+                            ("Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"),
+                            index = (datetime.today().month()-1))
+    show_month = st.checkbox(f"Media di {month_sel}", value = False)
     
-    weekday_sel = st.selectbox("Giorno della settimana", 
+    #----------------------------------------------------------------
+    #st.divider()
+
+    weekday_sel = st.selectbox("Media giorno della settimana", 
                                ("Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato", "Domenica"),
                                index = datetime.today().weekday())
-    # Selettore Data
-    data_sel = st.date_input("Giorno specifico", value=datetime.today())
+    show_weekday = st.checkbox(f"Media dei {weekday_sel}", value=True)
 
-    st.divider()
-    st.subheader("Visualizzazione")
+    show_month_weekday = st.checkbox(f"Media dei {weekday_sel} in {month_sel}", value= True)
+
+    #----------------------------------------------------------------
+    #st.divider()
+
+
+    data_sel = st.date_input("Occupazione in data:", value=datetime.today())
     show_specific = st.checkbox("Occupazione del giorno", value=False)
-    show_general = st.checkbox("Media generale storica", value=True)
-    show_weekday = st.checkbox(f"Media dei {inv_weekdays[data_sel.weekday()]}", value=True)
+
+    #----------------------------------------------------------------
+    #st.divider()
+    
+    show_general = st.checkbox("Media generale storica", value=False)
+
+
 
 # Creazione del grafico con Plotly (per avere etichette Y personalizzate)
 fig = go.Figure()
@@ -97,6 +144,15 @@ if show_general:
 if show_weekday:
     v, i = extract_weekday_mean(df, data_sel, weekdays[weekday_sel])
     add_to_plot(v, i, f"Media {weekday_sel}", "#FF4B4B")
+
+if show_month:
+    v, i = extract_month_mean(df, data_sel, months[month_sel])
+    add_to_plot(v, i, f"Media {month_sel}", "#995FA3")
+
+if show_month_weekday:
+    v, i = extract_month_weekday_mean(df, data_sel, months[month_sel])
+    add_to_plot(v, i, f"Media {month_sel}", "#3066BE")
+
 
 # Formattazione Assi
 fig.update_layout(
