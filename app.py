@@ -122,10 +122,10 @@ with st.sidebar:
 
     option_formatting = {
         "media generale": "Media generale",
-        "media giorno" : f"Media {weekday_sel}",
-        "media mese" : f"Media {month_sel}",
-        "media mese giorno" : f"Media {weekday_sel} in {month_sel}",
-        "storico data" : f"Occupazione del {data_sel.strftime('%d/%m/%Y')}"
+        "media giorno" : "Media del giorno",
+        "media mese" : "Media del mese",
+        "media mese giorno" : "Media del giorno nel mese",
+        "storico data" : "Occupazione del giorno"
         }
     
     available_options = [
