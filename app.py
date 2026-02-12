@@ -116,30 +116,32 @@ with st.sidebar:
 
     if 'selected_options' not in st.session_state:
         st.session_state.selected_options = [
-            f"Media {weekday_sel}", 
-            f"Media {weekday_sel} in {month_sel}"
+            "media giorno",
+            "media mese giorno"
         ]
 
+    option_formatting = {
+        "media generale": "Media generale",
+        "media giorno" : f"Media {weekday_sel}",
+        "media mese" : f"Media {month_sel}",
+        "media mese giorno" : f"Media {weekday_sel} in {month_sel}",
+        "storico data" : f"Occupazione del {data_sel.strftime('%d/%m/%Y')}"
+        }
     
     options = st.multiselect(
         "Linee da visualizzare:",
-        [
-            f"Occupazione del {data_sel.strftime('%d/%m/%Y')}",
-            "Media generale",
-            f"Media {weekday_sel}",
-            f"Media {month_sel}",
-            f"Media {weekday_sel} in {month_sel}"
-        ],
-        default= st.session_state.selected_options
+        option_formatting.keys(),
+        format_func = lambda x: option_formatting[x],
+        default = st.session_state.selected_options
     )
 
     st.session_state.selected_options = options
     
-    show_specific = f"Occupazione del {data_sel.strftime('%d/%m/%Y')}" in options
-    show_general = "Media generale" in options
-    show_weekday = f"Media {weekday_sel}" in options
-    show_month = f"Media {month_sel}" in options
-    show_month_weekday = f"Media {weekday_sel} in {month_sel}" in options
+    show_specific = f"storico data" in options
+    show_general = "media generale" in options
+    show_weekday = f"media giorno" in options
+    show_month = f"media mese" in options
+    show_month_weekday = f"media mese giorno" in options
     
 fig = go.Figure()
 
