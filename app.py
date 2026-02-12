@@ -116,7 +116,7 @@ with st.sidebar:
 
     if 'selected_options' not in st.session_state:
         st.session_state.selected_options = [
-            "media giorno",
+            "storico data",
             "media mese giorno"
         ]
 
