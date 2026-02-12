@@ -102,7 +102,7 @@ with st.sidebar:
     st.header("Configurazione")
     
     # Selettori sempre visibili
-    data_sel = st.date_input("Data:", value=datetime.today())
+    data_sel = st.date_input("Data", value=datetime.today())
     
     col1, col2 = st.columns(2)
     with col1:
