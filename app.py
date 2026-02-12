@@ -50,7 +50,8 @@ ultimo_scrape = df.index.max()
 # Formattiamo le date per una lettura più piacevole
 fmt_display = "%d/%m/%Y alle %H:%M"
 
-def extract_day(df, day):
+def extract_day(df: pd.DataFrame, day: datetime) -> tuple[pd.Series, pd.DatetimeIndex]:
+
     target_date = day if isinstance(day, datetime) else day
     
     day_df = df[df.index.date == target_date]
@@ -61,7 +62,8 @@ def extract_day(df, day):
         
     return day_df['value'].rolling(window=50, center=True).mean(), day_df.index
 
-def extract_general_mean(df, day):
+def extract_general_mean(df: pd.DataFrame, day: datetime.date) -> tuple[pd.Series, pd.DatetimeIndex]:
+
     hours_mean = df['value'].groupby(df.index.time).mean()
     #hours_mean = hours_mean.map(lambda x: round(x))
     hours_mean.index = [datetime.combine(day, time) for time in hours_mean.index]
@@ -71,16 +73,16 @@ def extract_general_mean(df, day):
 
     return hours_mean.values, hours_mean.index
 
-def extract_weekday_mean(df, day, weekday):
+def extract_weekday_mean(df: pd.DataFrame, day: datetime.date, weekday: int) -> tuple[pd.Series, pd.DatetimeIndex]:
     
     weekday_df = df[df.index.dayofweek == weekday]
     return extract_general_mean(weekday_df, day)
 
-def extract_month_mean(df, day, month):
+def extract_month_mean(df, day: datetime.date, month: int) -> tuple[pd.Series, pd.DatetimeIndex]:
     month_df = df[df.index.month == month]
     return extract_general_mean(month_df, day)
 
-def extract_month_weekday_mean(df, day, month, weekday):
+def extract_month_weekday_mean(df, day: datetime.date, month: int, weekday: int) -> tuple[pd.Series, pd.DatetimeIndex]:
     month_weekay_df = df[df.index.dayofweek == weekday & df.index.month == month]
     return extract_general_mean(month_weekay_df, day)
 
@@ -96,7 +98,7 @@ with st.sidebar:
 
     month_sel = st.selectbox("Media mese",
                             ("Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"),
-                            index = (datetime.today().month()-1))
+                            index = (datetime.today().month-1))
     show_month = st.checkbox(f"Media di {month_sel}", value = False)
     
     #----------------------------------------------------------------
