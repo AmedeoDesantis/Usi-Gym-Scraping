@@ -159,7 +159,7 @@ if show_month:
 
 if show_month_weekday:
     v, i = extract_month_weekday_mean(df, data_sel, months[month_sel], weekdays[weekday_sel])
-    add_to_plot(v, i, f"Media {month_sel}", "#3066BE")
+    add_to_plot(v, i, f"Media {weekday_sel} in {month_sel}", "#3066BE")
 
 
 # Formattazione Assi
