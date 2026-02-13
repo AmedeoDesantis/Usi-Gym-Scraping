@@ -169,7 +169,7 @@ def add_to_plot(values, index, name, color=None):
         print(x_hours)   
         print(values)         
             
-        fig.add_trace(go.Histogram(x=b, y=a, name=name))
+        fig.add_trace(go.Histogram(y=a, name=name))
 
         #fig.add_trace(go.Histogram(x=x_hours, y=values, name=name))
 
