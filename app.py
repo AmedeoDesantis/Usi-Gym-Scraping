@@ -165,7 +165,10 @@ def add_to_plot(values, index, name, color=None):
         for i in range(len(values)):
             if i % len(values)/16:
                 a.append(values[i])
-                b.append(x_hours[i])            
+                b.append(x_hours[i])
+
+        print(x_hours)   
+        print(values)         
             
         fig.add_trace(go.Histogram(x=b, y=a, name=name))
 
