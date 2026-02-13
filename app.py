@@ -158,7 +158,18 @@ def add_to_plot(values, index, name, color=None):
     if values is not None:
         # Convertiamo l'indice in ore decimali per l'asse X
         x_hours = [t.hour + t.minute/60.0 for t in index]
-        fig.add_trace(go.Histogram(x=x_hours, y=values, name=name))
+
+        a = []
+        b = []
+
+        for i in range(len(values)):
+            if i % len(values)/16:
+                a.append(values[i])
+                b.append(x_hours[i])            
+            
+        fig.add_trace(go.Histogram(x=b, y=a, name=name))
+
+        #fig.add_trace(go.Histogram(x=x_hours, y=values, name=name))
 
 # Logica di popolamento grafico
 if show_specific:
