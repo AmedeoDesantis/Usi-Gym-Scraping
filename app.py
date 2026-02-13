@@ -163,7 +163,7 @@ def add_to_plot(values, index, name, color=None):
         b = []
 
         for i in range(len(values)):
-            if i % len(values)/16:
+            if i % len(values)/16==0:
                 a.append(values[i])
                 b.append(x_hours[i])
 
