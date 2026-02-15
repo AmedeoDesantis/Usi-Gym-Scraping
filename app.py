@@ -136,11 +136,11 @@ with st.sidebar:
         "storico data"
     ]
 
-    general_check = st.selectbox("general visualizzato come bar")
-    weekday_check = st.selectbox("weekday visualizzato come bar")
-    month_check = st.selectbox("month visualizzato come bar")
-    month_weekday_check = st.selectbox("month weekday visualizzato come bar")
-    specific_check = st.selectbox("specific visualizzato come bar")
+    general_check = st.checkbox("general visualizzato come bar")
+    weekday_check = st.checkbox("weekday visualizzato come bar")
+    month_check = st.checkbox("month visualizzato come bar")
+    month_weekday_check = st.checkbox("month weekday visualizzato come bar")
+    specific_check = st.checkbox("specific visualizzato come bar")
 
 
 
