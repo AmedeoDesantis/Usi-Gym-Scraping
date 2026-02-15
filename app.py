@@ -160,16 +160,15 @@ def add_to_plot(values, index, name, color=None):
         x_hours = [t.hour + t.minute/60.0 for t in index]
 
         vals = []
-        x = []
+        xs = []
 
-        for i in range(len(x_hours)):
-            #solo valori dell'ora
-            if i % 1 == 0:
-                vals.append(values[i])
-                x.append(x_hours[i])
+        for x, val in zip(x_hours, values):
+            if x % 1 == 0:
+                xs.append(x)
+                vals.append(val)
 
         fig.add_trace(go.Bar(
-            x=x, 
+            x=xs, 
             y=vals, 
             name=name,
             marker_color=color,
