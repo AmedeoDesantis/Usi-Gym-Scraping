@@ -222,6 +222,7 @@ fig.update_layout(
         ticktext = ["Bassa", "Media", "Alta", "Massima"],
         range = [-0.2, 3.2]
     ),
+    barcornerradius = "10%",
     legend = dict(yanchor="top", y=0.99, xanchor="left", x=0.01),
     margin = dict(l=20, r=20, t=20, b=20),
     height = 600
