@@ -159,20 +159,15 @@ def add_to_plot(values, index, name, color=None):
         # Convertiamo l'indice in ore decimali per l'asse X
         x_hours = [t.hour + t.minute/60.0 for t in index]
 
-        a = []
-        b = []
-
-        for i in range(24):
-            a.append(values[i * int(len(values)/24)])
-            b.append(x_hours[i * int(len(values)/24)])
-
-        print(x_hours)   
-        print(values)         
-            
-        fig.add_trace(go.Histogram(y=a, name=name))
-
-        #fig.add_trace(go.Histogram(x=x_hours, y=values, name=name))
-
+        fig.add_trace(go.Bar(
+            x=x_hours, 
+            y=values, 
+            name=name,
+            marker_color=color,
+            opacity=0.7,
+            # Questo assicura che le barre siano posizionate correttamente sull'asse X
+            offset=0 
+        ))
 # Logica di popolamento grafico
 if show_specific:
     v, i = extract_day(df, data_sel)
@@ -197,17 +192,18 @@ if show_month_weekday:
 
 # Formattazione Assi
 fig.update_layout(
-    xaxis_title="Orario",
-    yaxis_title="Livello Occupazione",
-    xaxis=dict(tickmode='linear', tick0=6, dtick=1, range=[6, 23]),
-    yaxis=dict(
-        tickvals=[0, 1, 2, 3],
-        ticktext=["Bassa", "Media", "Alta", "Massima"],
-        range=[-0.2, 3.2]
+    barmode = "overlay",
+    xaxis_title = "Orario",
+    yaxis_title = "Livello Occupazione",
+    xaxis = dict(tickmode='linear', tick0=6, dtick=1, range=[6, 23]),
+    yaxis = dict(
+        tickvals = [0, 1, 2, 3],
+        ticktext = ["Bassa", "Media", "Alta", "Massima"],
+        range = [-0.2, 3.2]
     ),
-    legend=dict(yanchor="top", y=0.99, xanchor="left", x=0.01),
-    margin=dict(l=20, r=20, t=20, b=20),
-    height=600
+    legend = dict(yanchor="top", y=0.99, xanchor="left", x=0.01),
+    margin = dict(l=20, r=20, t=20, b=20),
+    height = 600
 )
 
 st.plotly_chart(fig, use_container_width=True)
