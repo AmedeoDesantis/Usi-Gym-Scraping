@@ -199,8 +199,8 @@ if show_general:
     add_to_plot(v, i, "Media Generale", "#626369", 'bar')
 
 if show_weekday:
-    v, i = extract_weekday_mean(df, data_sel, weekdays[weekday_sel], 'bar')
-    add_to_plot(v, i, f"Media {weekday_sel}", "#FF4B4B")
+    v, i = extract_weekday_mean(df, data_sel, weekdays[weekday_sel])
+    add_to_plot(v, i, f"Media {weekday_sel}", "#FF4B4B", 'bar')
 
 if show_month:
     v, i = extract_month_mean(df, data_sel, months[month_sel])
