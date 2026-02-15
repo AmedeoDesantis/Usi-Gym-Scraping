@@ -192,14 +192,14 @@ def add_to_plot(values, index, name, color=None, mode = 'line'):
 # Logica di popolamento grafico
 if show_specific:
     v, i = extract_day(df, data_sel)
-    add_to_plot(v, i, f"Occupazione {data_sel.strftime('%d/%m/%Y')}", "#D0CFD1", 'bar')
+    add_to_plot(v, i, f"Occupazione {data_sel.strftime('%d/%m/%Y')}", "#D0CFD1")
 
 if show_general:
     v, i = extract_general_mean(df, data_sel)
-    add_to_plot(v, i, "Media Generale", "#626369", 'line')
+    add_to_plot(v, i, "Media Generale", "#626369", 'bar')
 
 if show_weekday:
-    v, i = extract_weekday_mean(df, data_sel, weekdays[weekday_sel])
+    v, i = extract_weekday_mean(df, data_sel, weekdays[weekday_sel], 'bar')
     add_to_plot(v, i, f"Media {weekday_sel}", "#FF4B4B")
 
 if show_month:
