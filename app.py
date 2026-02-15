@@ -159,9 +159,20 @@ def add_to_plot(values, index, name, color=None):
         # Convertiamo l'indice in ore decimali per l'asse X
         x_hours = [t.hour + t.minute/60.0 for t in index]
 
+        #18 ore, da 6 a 24
+        vals_per_hour = int(len(x_hours) / 18)
+
+        vals = []
+        x = []
+
+        for i in range(len(x_hours)):
+            if i % vals_per_hour == 0:
+                vals.append(values[i])
+                x.append(x_hours[i])
+
         fig.add_trace(go.Bar(
-            x=x_hours, 
-            y=values, 
+            x=x, 
+            y=vals, 
             name=name,
             marker_color=color,
             opacity=0.7,
