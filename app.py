@@ -136,6 +136,13 @@ with st.sidebar:
         "storico data"
     ]
 
+    general_check = st.selectbox("general visualizzato come bar")
+    weekday_check = st.selectbox("weekday visualizzato come bar")
+    month_check = st.selectbox("month visualizzato come bar")
+    month_weekday_check = st.selectbox("month weekday visualizzato come bar")
+    specific_check = st.selectbox("specific visualizzato come bar")
+
+
 
     options = st.multiselect(
         "Da visualizzare:",
@@ -154,11 +161,15 @@ with st.sidebar:
     
 fig = go.Figure()
 
-def add_to_plot(values, index, name, color=None, mode = 'line'):
+def add_to_plot(values, index, name, color=None, mode = 'line', bar_bool = False):
     if values is not None:
         # Convertiamo l'indice in ore decimali per l'asse X
         x_hours = [t.hour + t.minute/60.0 for t in index]
 
+        if bar_bool:
+            mode = 'bar'
+        else:
+            mode = 'line'
 
         match mode:
             case 'line':
@@ -192,23 +203,23 @@ def add_to_plot(values, index, name, color=None, mode = 'line'):
 # Logica di popolamento grafico
 if show_specific:
     v, i = extract_day(df, data_sel)
-    add_to_plot(v, i, f"Occupazione {data_sel.strftime('%d/%m/%Y')}", "#D0CFD1")
+    add_to_plot(v, i, f"Occupazione {data_sel.strftime('%d/%m/%Y')}", "#D0CFD1", bar_bool=specific_check)
 
 if show_general:
     v, i = extract_general_mean(df, data_sel)
-    add_to_plot(v, i, "Media Generale", "#626369", 'bar')
+    add_to_plot(v, i, "Media Generale", "#626369", 'bar', bar_bool=general_check)
 
 if show_weekday:
     v, i = extract_weekday_mean(df, data_sel, weekdays[weekday_sel])
-    add_to_plot(v, i, f"Media {weekday_sel}", "#FF4B4B", 'bar')
+    add_to_plot(v, i, f"Media {weekday_sel}", "#FF4B4B", 'bar', bar_bool=weekday_check)
 
 if show_month:
     v, i = extract_month_mean(df, data_sel, months[month_sel])
-    add_to_plot(v, i, f"Media {month_sel}", "#995FA3")
+    add_to_plot(v, i, f"Media {month_sel}", "#995FA3", bar_bool=month_check)
 
 if show_month_weekday:
     v, i = extract_month_weekday_mean(df, data_sel, months[month_sel], weekdays[weekday_sel])
-    add_to_plot(v, i, f"Media {weekday_sel} in {month_sel}", "#3066BE")
+    add_to_plot(v, i, f"Media {weekday_sel} in {month_sel}", "#3066BE", bar_bool=month_weekday_check)
 
 
 # Formattazione Assi
