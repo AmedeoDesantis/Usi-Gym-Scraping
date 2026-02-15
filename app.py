@@ -165,7 +165,7 @@ def add_to_plot(values, index, name, color=None):
         for x, val in zip(x_hours, values):
             if x % 1 == 0:
                 xs.append(x)
-                vals.append(val)
+                vals.append(val+0.01)
 
         fig.add_trace(go.Bar(
             x=xs, 
