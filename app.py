@@ -154,36 +154,49 @@ with st.sidebar:
     
 fig = go.Figure()
 
-def add_to_plot(values, index, name, color=None):
+def add_to_plot(values, index, name, color=None, mode = 'line'):
     if values is not None:
         # Convertiamo l'indice in ore decimali per l'asse X
         x_hours = [t.hour + t.minute/60.0 for t in index]
 
-        vals = []
-        xs = []
 
-        for x, val in zip(x_hours, values):
-            if x % 1 == 0:
-                xs.append(x)
-                vals.append(val+0.01)
+        match mode:
+            case 'line':
+                obj = go.Scatter(
+                   x=x_hours, 
+                   y=values, 
+                   name=name, 
+                   mode='lines', 
+                   line=dict(color=color)
+                )
+            
+            case 'bar':
+                
+                vals = []
+                xs = []
 
-        fig.add_trace(go.Bar(
-            x=xs, 
-            y=vals, 
-            name=name,
-            marker_color=color,
-            opacity=0.7,
-            # Questo assicura che le barre siano posizionate correttamente sull'asse X
-            offset=0 
-        ))
+                for x, val in zip(x_hours, values):
+                    if x % 1 == 0:
+                        xs.append(x)
+                        vals.append(val+0.01)
+
+                obj = go.Bar(
+                    x=xs, 
+                    y=vals, 
+                    name=name,
+                    marker_color=color,
+                    opacity=0.7,
+                )
+
+        fig.add_trace(obj)
 # Logica di popolamento grafico
 if show_specific:
     v, i = extract_day(df, data_sel)
-    add_to_plot(v, i, f"Occupazione {data_sel.strftime('%d/%m/%Y')}", "#D0CFD1")
+    add_to_plot(v, i, f"Occupazione {data_sel.strftime('%d/%m/%Y')}", "#D0CFD1", 'bar')
 
 if show_general:
     v, i = extract_general_mean(df, data_sel)
-    add_to_plot(v, i, "Media Generale", "#626369")
+    add_to_plot(v, i, "Media Generale", "#626369", 'line')
 
 if show_weekday:
     v, i = extract_weekday_mean(df, data_sel, weekdays[weekday_sel])
