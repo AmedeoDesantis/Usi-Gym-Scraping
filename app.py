@@ -110,6 +110,7 @@ with st.sidebar:
     
     # Selettori sempre visibili
     data_sel = st.date_input("Data", value=datetime.today())
+
     
     # col1, col2 = st.columns(2)
     # with col1:
@@ -149,7 +150,9 @@ with st.sidebar:
     # month_weekday_check = st.checkbox("month weekday visualizzato come bar")
     # specific_check = st.checkbox("specific visualizzato come bar")
 
-    num_weeks_sel = st.slider("seleziona il numero di settimane da considerare per la media", 1, 30, 2)
+    num_weeks_sel = st.slider("seleziona il numero di settimane da considerare per la media", min_value=1, value = 2)
+    manu_check = st.checkbox("qui puoi invertire istogramma e linea", False)
+
 
     # options = st.multiselect(
     #     "Da visualizzare:",
@@ -209,7 +212,6 @@ def add_to_plot(values, index, name, color=None, mode = 'line', bar_bool = False
         fig.add_trace(obj)
 # Logica di popolamento grafico
 
-manu_check = st.checkbox("qui puoi invertire istogramma e linea", False)
 
 if not manu_check:
     specific_bar_visualization = False
@@ -237,7 +239,7 @@ add_to_plot(v, i, f"Occupazione {data_sel.strftime('%d/%m/%Y')}", "#D0CFD1", bar
 
 #if show_month_weekday:
 v, i = extract_weekday_before_mean(df, data_sel, num_weeks_sel)
-add_to_plot(v, i, f"Media {weekday_sel} in {month_sel}", "#FF4B4B", bar_bool=weekdats_before_mean_bar_visualization)
+add_to_plot(v, i, f"Media {data_sel.date.weekday()} da {num_weeks_sel} settimane", "#FF4B4B", bar_bool=weekdats_before_mean_bar_visualization)
 
 
 # Formattazione Assi
