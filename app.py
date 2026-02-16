@@ -1,5 +1,5 @@
 import pandas as pd
-from datetime import datetime
+from datetime import datetime, timedelta
 import streamlit as st
 import plotly.graph_objects as go
 
@@ -92,6 +92,13 @@ def extract_month_weekday_mean(df, day: datetime.date, month: int, weekday: int)
     month_weekday_df = df[(df.index.dayofweek == weekday) & (df.index.month == month)]
     return extract_general_mean(month_weekday_df, day)
 
+def extract_weekday_before_mean(df, day, num_weeks = 2):
+
+    td = timedelta(days= num_weeks * 7)
+    d = df[(df.index >= day - td) & (df.index <= day) & (df.index.dayofweek == day.dayofweek)]
+
+    return extract_general_mean(d, day)
+
 
 st.set_page_config(page_title="Monitor Palestra", layout="wide")
 st.title("Monitor Occupazione Palestra")
@@ -142,7 +149,7 @@ with st.sidebar:
     month_weekday_check = st.checkbox("month weekday visualizzato come bar")
     specific_check = st.checkbox("specific visualizzato come bar")
 
-
+    num_weeks_sel = st.slider("seleziona il numero di settimane da considerare per la media", 1, 30, 2)
 
     options = st.multiselect(
         "Da visualizzare:",
@@ -218,7 +225,7 @@ if show_month:
     add_to_plot(v, i, f"Media {month_sel}", "#995FA3", bar_bool=month_check)
 
 if show_month_weekday:
-    v, i = extract_month_weekday_mean(df, data_sel, months[month_sel], weekdays[weekday_sel])
+    v, i = extract_weekday_before_mean(df, data_sel, num_weeks_sel)
     add_to_plot(v, i, f"Media {weekday_sel} in {month_sel}", "#3066BE", bar_bool=month_weekday_check)
 
 
