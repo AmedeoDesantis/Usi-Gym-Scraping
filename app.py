@@ -1,7 +1,6 @@
 import pandas as pd
 from datetime import datetime, timedelta
 import streamlit as st
-import logger
 import plotly.graph_objects as go
 
 df = pd.read_csv('occupancy_log.csv')
