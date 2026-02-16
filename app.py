@@ -1,5 +1,5 @@
 import pandas as pd
-from datetime import datetime
+from datetime import datetime, timedelta
 import streamlit as st
 import plotly.graph_objects as go
 
@@ -79,18 +79,25 @@ def extract_general_mean(df, day):
     
     return hours_mean.values, hours_mean.index
 
-def extract_weekday_mean(df: pd.DataFrame, day: datetime.date, weekday: int) -> tuple[pd.Series, pd.DatetimeIndex]:
+# def extract_weekday_mean(df: pd.DataFrame, day: datetime.date, weekday: int) -> tuple[pd.Series, pd.DatetimeIndex]:
     
-    weekday_df = df[df.index.dayofweek == weekday]
-    return extract_general_mean(weekday_df, day)
+#     weekday_df = df[df.index.dayofweek == weekday]
+#     return extract_general_mean(weekday_df, day)
 
-def extract_month_mean(df, day: datetime.date, month: int) -> tuple[pd.Series, pd.DatetimeIndex]:
-    month_df = df[df.index.month == month]
-    return extract_general_mean(month_df, day)
+# def extract_month_mean(df, day: datetime.date, month: int) -> tuple[pd.Series, pd.DatetimeIndex]:
+#     month_df = df[df.index.month == month]
+#     return extract_general_mean(month_df, day)
 
-def extract_month_weekday_mean(df, day: datetime.date, month: int, weekday: int) -> tuple[pd.Series, pd.DatetimeIndex]:
-    month_weekday_df = df[(df.index.dayofweek == weekday) & (df.index.month == month)]
-    return extract_general_mean(month_weekday_df, day)
+# def extract_month_weekday_mean(df, day: datetime.date, month: int, weekday: int) -> tuple[pd.Series, pd.DatetimeIndex]:
+#     month_weekday_df = df[(df.index.dayofweek == weekday) & (df.index.month == month)]
+#     return extract_general_mean(month_weekday_df, day)
+
+def extract_weekday_before_mean(df, day, num_weeks = 2):
+
+    td = timedelta(days = num_weeks * 7)
+    weekday_before_df = df[(df.index.date >= day - td) & (df.index.date <= day) & (df.index.dayofweek == day.weekday())]
+
+    return extract_general_mean(weekday_before_df, day)
 
 
 st.set_page_config(page_title="Monitor Palestra", layout="wide")
@@ -103,98 +110,153 @@ with st.sidebar:
     
     # Selettori sempre visibili
     data_sel = st.date_input("Data", value=datetime.today())
+
     
-    col1, col2 = st.columns(2)
-    with col1:
-        weekday_sel = st.selectbox("Giorno", list(weekdays.keys()), 
-                                  index=datetime.today().weekday())
-    with col2:
-        month_sel = st.selectbox("Mese", list(months.keys()),
-                                index=datetime.today().month-1)
+    # col1, col2 = st.columns(2)
+    # with col1:
+    #     weekday_sel = st.selectbox("Giorno", list(weekdays.keys()), 
+    #                               index=datetime.today().weekday())
+    # with col2:
+    #     month_sel = st.selectbox("Mese", list(months.keys()),
+    #                             index=datetime.today().month-1)
     
-    st.divider()
+    #st.divider()
 
-    if 'selected_options' not in st.session_state:
-        st.session_state.selected_options = [
-            "storico data",
-            "media mese giorno"
-        ]
+    # if 'selected_options' not in st.session_state:
+    #     st.session_state.selected_options = [
+    #         "storico data",
+    #         "media mese giorno"
+    #     ]
 
-    option_formatting = {
-        "media generale": "Media generale",
-        "media giorno" : "Media del giorno",
-        "media mese" : "Media del mese",
-        "media mese giorno" : "Media del giorno nel mese",
-        "storico data" : "Occupazione del giorno"
-        }
+    # option_formatting = {
+    #     "media generale": "Media generale",
+    #     "media giorno" : "Media del giorno",
+    #     "media mese" : "Media del mese",
+    #     "media mese giorno" : "Media del giorno nel mese",
+    #     "storico data" : "Occupazione del giorno"
+    #     }
     
-    available_options = [
-        "media generale", 
-        "media giorno", 
-        "media mese", 
-        "media mese giorno", 
-        "storico data"
-    ]
+    # available_options = [
+    #     "media generale", 
+    #     "media giorno", 
+    #     "media mese", 
+    #     "media mese giorno", 
+    #     "storico data"
+    # ]
+
+    # general_check = st.checkbox("general visualizzato come bar")
+    # weekday_check = st.checkbox("weekday visualizzato come bar")
+    # month_check = st.checkbox("month visualizzato come bar")
+    # month_weekday_check = st.checkbox("month weekday visualizzato come bar")
+    # specific_check = st.checkbox("specific visualizzato come bar")
+
+    num_weeks_sel = st.slider("seleziona il numero di settimane da considerare per la media", min_value=1, value = 2)
+    manu_check = st.checkbox("qui puoi invertire istogramma e linea", False)
 
 
-    options = st.multiselect(
-        "Da visualizzare:",
-        placeholder = "Scegli...",
-        options=available_options,
-        format_func = lambda x: option_formatting[x],
-        key= "selected_options"
-        )
+    # options = st.multiselect(
+    #     "Da visualizzare:",
+    #     placeholder = "Scegli...",
+    #     options=available_options,
+    #     format_func = lambda x: option_formatting[x],
+    #     key= "selected_options"
+    #     )
      
     
-    show_specific =         "storico data"      in options
-    show_general =          "media generale"    in options
-    show_weekday =          "media giorno"      in options
-    show_month =            "media mese"        in options
-    show_month_weekday =    "media mese giorno" in options
+    # show_specific =         "storico data"      in options
+    # show_general =          "media generale"    in options
+    # show_weekday =          "media giorno"      in options
+    # show_month =            "media mese"        in options
+    # show_month_weekday =    "media mese giorno" in options
     
 fig = go.Figure()
 
-def add_to_plot(values, index, name, color=None):
+def add_to_plot(values, index, name, color=None, mode = 'line', bar_bool = False):
     if values is not None:
         # Convertiamo l'indice in ore decimali per l'asse X
         x_hours = [t.hour + t.minute/60.0 for t in index]
-        fig.add_trace(go.Scatter(x=x_hours, y=values, name=name, mode='lines', line=dict(color=color)))
 
+        if bar_bool:
+            mode = 'bar'
+        else:
+            mode = 'line'
+
+        match mode:
+            case 'line':
+                obj = go.Scatter(
+                   x=x_hours, 
+                   y=values, 
+                   name=name, 
+                   mode='lines', 
+                   line=dict(color=color)
+                )
+            
+            case 'bar':
+                
+                vals = []
+                xs = []
+
+                for x, val in zip(x_hours, values):
+                    if x % 1 == 0:
+                        xs.append(x)
+                        vals.append(val+0.01)
+
+                obj = go.Bar(
+                    x=xs, 
+                    y=vals, 
+                    name=name,
+                    marker_color=color,
+                    opacity=0.7,
+                )
+
+        fig.add_trace(obj)
 # Logica di popolamento grafico
-if show_specific:
-    v, i = extract_day(df, data_sel)
-    add_to_plot(v, i, f"Occupazione {data_sel.strftime('%d/%m/%Y')}", "#D0CFD1")
 
-if show_general:
-    v, i = extract_general_mean(df, data_sel)
-    add_to_plot(v, i, "Media Generale", "#626369")
 
-if show_weekday:
-    v, i = extract_weekday_mean(df, data_sel, weekdays[weekday_sel])
-    add_to_plot(v, i, f"Media {weekday_sel}", "#FF4B4B")
+if not manu_check:
+    specific_bar_visualization = False
+    weekdats_before_mean_bar_visualization = True
+else:
+    specific_bar_visualization = True
+    weekdats_before_mean_bar_visualization = False
 
-if show_month:
-    v, i = extract_month_mean(df, data_sel, months[month_sel])
-    add_to_plot(v, i, f"Media {month_sel}", "#995FA3")
 
-if show_month_weekday:
-    v, i = extract_month_weekday_mean(df, data_sel, months[month_sel], weekdays[weekday_sel])
-    add_to_plot(v, i, f"Media {weekday_sel} in {month_sel}", "#3066BE")
+#if show_specific:
+v, i = extract_day(df, data_sel)
+add_to_plot(v, i, f"Occupazione {data_sel.strftime('%d/%m/%Y')}", "#D0CFD1", bar_bool=specific_bar_visualization)
+
+# if show_general:
+#     v, i = extract_general_mean(df, data_sel)
+#     add_to_plot(v, i, "Media Generale", "#626369", 'bar', bar_bool=general_check)
+
+# if show_weekday:
+#     v, i = extract_weekday_mean(df, data_sel, weekdays[weekday_sel])
+#     add_to_plot(v, i, f"Media {weekday_sel}", "#FF4B4B", 'bar', bar_bool=weekday_check)
+
+# if show_month:
+#     v, i = extract_month_mean(df, data_sel, months[month_sel])
+#     add_to_plot(v, i, f"Media {month_sel}", "#995FA3", bar_bool=month_check)
+
+#if show_month_weekday:
+v, i = extract_weekday_before_mean(df, data_sel, num_weeks_sel)
+add_to_plot(v, i, f"Media {inv_weekdays[data_sel.weekday()]} da {num_weeks_sel} settimane", "#FF4B4B", bar_bool=weekdats_before_mean_bar_visualization)
 
 
 # Formattazione Assi
 fig.update_layout(
-    xaxis_title="Orario",
-    yaxis_title="Livello Occupazione",
-    xaxis=dict(tickmode='linear', tick0=6, dtick=1, range=[6, 23]),
-    yaxis=dict(
-        tickvals=[0, 1, 2, 3],
-        ticktext=["Bassa", "Media", "Alta", "Massima"],
-        range=[-0.2, 3.2]
+    barmode = "overlay",
+    xaxis_title = "Orario",
+    yaxis_title = "Livello Occupazione",
+    xaxis = dict(tickmode='linear', tick0=6, dtick=1, range=[6, 23]),
+    yaxis = dict(
+        tickvals = [0, 1, 2, 3],
+        ticktext = ["Bassa", "Media", "Alta", "Massima"],
+        range = [-0.2, 3.2]
     ),
-    legend=dict(yanchor="top", y=0.99, xanchor="left", x=0.01),
-    margin=dict(l=20, r=20, t=20, b=20),
-    height=600
+    barcornerradius = "10%",
+    legend = dict(yanchor="top", y=0.99, xanchor="left", x=0.01),
+    margin = dict(l=20, r=20, t=20, b=20),
+    height = 600
 )
 
 st.plotly_chart(fig, use_container_width=True)
