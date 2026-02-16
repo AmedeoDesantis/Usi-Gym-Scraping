@@ -208,9 +208,9 @@ def add_to_plot(values, index, name, color=None, mode = 'line', bar_bool = False
 
         fig.add_trace(obj)
 # Logica di popolamento grafico
-if show_specific:
-    v, i = extract_day(df, data_sel)
-    add_to_plot(v, i, f"Occupazione {data_sel.strftime('%d/%m/%Y')}", "#D0CFD1", bar_bool=specific_check)
+#if show_specific:
+v, i = extract_day(df, data_sel)
+add_to_plot(v, i, f"Occupazione {data_sel.strftime('%d/%m/%Y')}", "#D0CFD1", bar_bool=specific_check)
 
 # if show_general:
 #     v, i = extract_general_mean(df, data_sel)
@@ -224,9 +224,9 @@ if show_specific:
 #     v, i = extract_month_mean(df, data_sel, months[month_sel])
 #     add_to_plot(v, i, f"Media {month_sel}", "#995FA3", bar_bool=month_check)
 
-if show_month_weekday:
-    v, i = extract_weekday_before_mean(df, data_sel, num_weeks_sel)
-    add_to_plot(v, i, f"Media {weekday_sel} in {month_sel}", "#FF4B4B", bar_bool=month_weekday_check)
+#if show_month_weekday:
+v, i = extract_weekday_before_mean(df, data_sel, num_weeks_sel)
+add_to_plot(v, i, f"Media {weekday_sel} in {month_sel}", "#FF4B4B", bar_bool=month_weekday_check)
 
 
 # Formattazione Assi
