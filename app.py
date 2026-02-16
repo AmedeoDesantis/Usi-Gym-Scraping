@@ -1,6 +1,7 @@
 import pandas as pd
 from datetime import datetime, timedelta
 import streamlit as st
+import logger
 import plotly.graph_objects as go
 
 df = pd.read_csv('occupancy_log.csv')
@@ -95,6 +96,9 @@ def extract_month_weekday_mean(df, day: datetime.date, month: int, weekday: int)
 def extract_weekday_before_mean(df, day, num_weeks = 2):
 
     td = timedelta(days = num_weeks * 7)
+    logger = logging.getLogger(__name__)
+    logger.info(f"giorno tot settimame indietro {day-td}")
+
     print(f"giorno mostrato {day-td}")
     d = df[(df.index.date >= day - td) & (df.index.date <= day) & (df.index.dayofweek == day.weekday())]
 
