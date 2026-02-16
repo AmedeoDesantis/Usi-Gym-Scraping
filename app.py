@@ -95,7 +95,7 @@ def extract_month_weekday_mean(df, day: datetime.date, month: int, weekday: int)
 def extract_weekday_before_mean(df, day, num_weeks = 2):
 
     td = timedelta(days= num_weeks * 7)
-    d = df[(df.index.date >= day - td) & (df.index.date <= day) & (df.index.dayofweek == day.dayofweek())]
+    d = df[(df.index.date >= day - td) & (df.index.date <= day) & (df.index.dayofweek == day.weekday())]
 
     return extract_general_mean(d, day)
 
