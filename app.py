@@ -239,7 +239,7 @@ add_to_plot(v, i, f"Occupazione {data_sel.strftime('%d/%m/%Y')}", "#D0CFD1", bar
 
 #if show_month_weekday:
 v, i = extract_weekday_before_mean(df, data_sel, num_weeks_sel)
-add_to_plot(v, i, f"Media {data_sel.date.weekday()} da {num_weeks_sel} settimane", "#FF4B4B", bar_bool=weekdats_before_mean_bar_visualization)
+add_to_plot(v, i, f"Media {data_sel.weekday()} da {num_weeks_sel} settimane", "#FF4B4B", bar_bool=weekdats_before_mean_bar_visualization)
 
 
 # Formattazione Assi
