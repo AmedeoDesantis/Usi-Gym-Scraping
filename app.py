@@ -96,8 +96,7 @@ def extract_month_weekday_mean(df, day: datetime.date, month: int, weekday: int)
 def extract_weekday_before_mean(df, day, num_weeks = 2):
 
     td = timedelta(days = num_weeks * 7)
-    logger = logging.getLogger(__name__)
-    logger.info(f"giorno tot settimame indietro {day-td}")
+    st.sidebar.write(f"DEBUG: Calcolo da {day-td} a {day}")
 
     print(f"giorno mostrato {day-td}")
     d = df[(df.index.date >= day - td) & (df.index.date <= day) & (df.index.dayofweek == day.weekday())]
